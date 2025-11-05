@@ -8,6 +8,24 @@ Design teams waste countless hours searching for the right assets across scatter
 
 Brand Assets Manager is a centralized, beautiful hub for all your design system assets. Built for modern teams who value consistency and speed, it provides instant access to your typography, colors, gradients, logos, icons, and UI components—all in one elegant interface.
 
+## 📸 Screenshots
+
+### Light Mode Interface
+![Light Mode](./screenshots/light-mode.png)
+*Clean, modern interface with all your brand assets organized and accessible*
+
+### Dark Mode Interface
+![Dark Mode](./screenshots/dark-mode.png)
+*Beautiful dark theme for comfortable viewing anytime*
+
+### Asset Management
+![Asset Management](./screenshots/asset-management.png)
+*Easily manage typography, colors, gradients, logos, icons, and components*
+
+### Share Feature
+![Share Feature](./screenshots/share-feature.png)
+*Generate shareable links instantly - no login required for viewers*
+
 ## ✨ Key Features
 
 ### 🎨 **Comprehensive Asset Management**
