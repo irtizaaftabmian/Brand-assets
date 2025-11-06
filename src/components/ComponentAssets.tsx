@@ -14,7 +14,11 @@ interface ComponentAsset {
   description: string;
 }
 
-export function ComponentAssets() {
+interface ComponentAssetsProps {
+  searchQuery?: string;
+}
+
+export function ComponentAssets({ searchQuery = "" }: ComponentAssetsProps) {
   const [components, setComponents] = useState<ComponentAsset[]>([]);
   const [newComponent, setNewComponent] = useState({
     name: "",
@@ -49,6 +53,12 @@ export function ComponentAssets() {
   const handleDelete = (id: string) => {
     saveComponents(components.filter(c => c.id !== id));
   };
+
+  // Filter components based on search query
+  const filteredComponents = components.filter((component) =>
+    component.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+    component.description.toLowerCase().includes(searchQuery.toLowerCase())
+  );
 
   return (
     <div className="space-y-6">
@@ -108,9 +118,13 @@ export function ComponentAssets() {
         <div className="border border-dashed rounded-lg p-12 text-center">
           <p className="text-muted-foreground">No components yet. Add your first component to get started.</p>
         </div>
+      ) : filteredComponents.length === 0 ? (
+        <div className="border border-dashed rounded-lg p-12 text-center">
+          <p className="text-muted-foreground">No components match your search.</p>
+        </div>
       ) : (
         <div className="grid grid-cols-4 gap-4">
-          {components.map((component) => (
+          {filteredComponents.map((component) => (
             <AssetCard
               key={component.id}
               id={component.id}

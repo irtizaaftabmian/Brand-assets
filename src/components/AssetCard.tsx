@@ -1,8 +1,9 @@
 import { useState } from "react";
 import { Card } from "./ui/card";
 import { Button } from "./ui/button";
+import { Checkbox } from "./ui/checkbox";
 import { Copy, Download, Trash2, Share2 } from "lucide-react";
-import { toast } from "sonner@2.0.3";
+import { toast } from "sonner";
 import { ShareDialog } from "./ShareDialog";
 
 interface AssetCardProps {
@@ -11,9 +12,12 @@ interface AssetCardProps {
   preview: React.ReactNode;
   data: any;
   onDelete: (id: string) => void;
+  isSelected?: boolean;
+  onSelect?: (id: string) => void;
+  bulkMode?: boolean;
 }
 
-export function AssetCard({ id, name, preview, data, onDelete }: AssetCardProps) {
+export function AssetCard({ id, name, preview, data, onDelete, isSelected = false, onSelect, bulkMode = false }: AssetCardProps) {
   const [shareDialogOpen, setShareDialogOpen] = useState(false);
   const shareUrl = `${window.location.origin}?asset=${encodeURIComponent(JSON.stringify({ id, name, data }))}`;
 
@@ -45,7 +49,16 @@ export function AssetCard({ id, name, preview, data, onDelete }: AssetCardProps)
 
   return (
     <>
-      <Card className="p-4 hover:border-foreground/20 transition-colors">
+      <Card className={`p-4 hover:border-foreground/20 transition-colors relative ${isSelected ? 'ring-2 ring-primary' : ''}`}>
+        {bulkMode && onSelect && (
+          <div className="absolute top-2 right-2 z-10">
+            <Checkbox
+              checked={isSelected}
+              onCheckedChange={() => onSelect(id)}
+              className="bg-background"
+            />
+          </div>
+        )}
         <div className="space-y-3">
           <div className="aspect-video bg-muted rounded-md flex items-center justify-center overflow-hidden">
             {preview}

@@ -16,7 +16,11 @@ interface TypographyAsset {
   lineHeight: string;
 }
 
-export function TypographyAssets() {
+interface TypographyAssetsProps {
+  searchQuery?: string;
+}
+
+export function TypographyAssets({ searchQuery = "" }: TypographyAssetsProps) {
   const [typography, setTypography] = useState<TypographyAsset[]>([]);
   const [newType, setNewType] = useState({
     name: "",
@@ -59,6 +63,12 @@ export function TypographyAssets() {
   const handleDelete = (id: string) => {
     saveTypography(typography.filter(t => t.id !== id));
   };
+
+  // Filter typography based on search query
+  const filteredTypography = typography.filter((type) =>
+    type.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+    type.fontFamily.toLowerCase().includes(searchQuery.toLowerCase())
+  );
 
   return (
     <div className="space-y-6">
@@ -144,9 +154,13 @@ export function TypographyAssets() {
         <div className="border border-dashed rounded-lg p-12 text-center">
           <p className="text-muted-foreground">No typography styles yet. Add your first style to get started.</p>
         </div>
+      ) : filteredTypography.length === 0 ? (
+        <div className="border border-dashed rounded-lg p-12 text-center">
+          <p className="text-muted-foreground">No typography styles match your search.</p>
+        </div>
       ) : (
         <div className="grid grid-cols-4 gap-4">
-          {typography.map((type) => (
+          {filteredTypography.map((type) => (
             <AssetCard
               key={type.id}
               id={type.id}

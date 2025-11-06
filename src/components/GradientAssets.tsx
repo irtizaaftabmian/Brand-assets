@@ -14,7 +14,11 @@ interface GradientAsset {
   angle: number;
 }
 
-export function GradientAssets() {
+interface GradientAssetsProps {
+  searchQuery?: string;
+}
+
+export function GradientAssets({ searchQuery = "" }: GradientAssetsProps) {
   const [gradients, setGradients] = useState<GradientAsset[]>([]);
   const [newGradient, setNewGradient] = useState({
     name: "",
@@ -50,6 +54,11 @@ export function GradientAssets() {
   const handleDelete = (id: string) => {
     saveGradients(gradients.filter(g => g.id !== id));
   };
+
+  // Filter gradients based on search query
+  const filteredGradients = gradients.filter((gradient) =>
+    gradient.name.toLowerCase().includes(searchQuery.toLowerCase())
+  );
 
   return (
     <div className="space-y-6">
@@ -135,9 +144,13 @@ export function GradientAssets() {
         <div className="border border-dashed rounded-lg p-12 text-center">
           <p className="text-muted-foreground">No gradients yet. Add your first gradient to get started.</p>
         </div>
+      ) : filteredGradients.length === 0 ? (
+        <div className="border border-dashed rounded-lg p-12 text-center">
+          <p className="text-muted-foreground">No gradients match your search.</p>
+        </div>
       ) : (
         <div className="grid grid-cols-4 gap-4">
-          {gradients.map((gradient) => (
+          {filteredGradients.map((gradient) => (
             <AssetCard
               key={gradient.id}
               id={gradient.id}

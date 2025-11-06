@@ -1,7 +1,8 @@
 import { useState, useEffect } from "react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "./components/ui/tabs";
 import { Button } from "./components/ui/button";
-import { Moon, Sun, Link2 } from "lucide-react";
+import { Input } from "./components/ui/input";
+import { Moon, Sun, Link2, Search, X } from "lucide-react";
 import { TypographyAssets } from "./components/TypographyAssets";
 import { ColorAssets } from "./components/ColorAssets";
 import { GradientAssets } from "./components/GradientAssets";
@@ -16,6 +17,7 @@ import { toast } from "sonner";
 export default function App() {
   const [theme, setTheme] = useState<"light" | "dark">("light");
   const [shareDialogOpen, setShareDialogOpen] = useState(false);
+  const [searchQuery, setSearchQuery] = useState("");
 
   useEffect(() => {
     const savedTheme = localStorage.getItem("design-system-theme") as "light" | "dark" | null;
@@ -77,12 +79,35 @@ export default function App() {
       
       {/* Header */}
       <header className="border-b sticky top-0 bg-background/95 backdrop-blur z-10">
-        <div className="container mx-auto px-8 py-4 flex items-center justify-between">
-          <div>
+        <div className="container mx-auto px-8 py-4 flex items-center justify-between gap-6">
+          <div className="flex-shrink-0">
             <h1>Design System</h1>
             <p className="text-muted-foreground">Manage and share your design assets</p>
           </div>
-          <div className="flex items-center gap-3">
+
+          {/* Search Bar */}
+          <div className="relative flex-1 max-w-md">
+            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-muted-foreground" />
+            <Input
+              type="text"
+              placeholder="Search assets..."
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              className="pl-10 pr-10"
+            />
+            {searchQuery && (
+              <Button
+                variant="ghost"
+                size="icon"
+                className="absolute right-1 top-1/2 transform -translate-y-1/2 h-7 w-7"
+                onClick={() => setSearchQuery("")}
+              >
+                <X className="w-4 h-4" />
+              </Button>
+            )}
+          </div>
+
+          <div className="flex items-center gap-3 flex-shrink-0">
             <Button variant="outline" onClick={handleExportAll}>
               <Link2 className="w-4 h-4 mr-2" />
               Share All
@@ -115,27 +140,27 @@ export default function App() {
           </TabsList>
 
           <TabsContent value="typography">
-            <TypographyAssets />
+            <TypographyAssets searchQuery={searchQuery} />
           </TabsContent>
 
           <TabsContent value="colors">
-            <ColorAssets />
+            <ColorAssets searchQuery={searchQuery} />
           </TabsContent>
 
           <TabsContent value="gradients">
-            <GradientAssets />
+            <GradientAssets searchQuery={searchQuery} />
           </TabsContent>
 
           <TabsContent value="logos">
-            <LogoAssets />
+            <LogoAssets searchQuery={searchQuery} />
           </TabsContent>
 
           <TabsContent value="icons">
-            <IconAssets />
+            <IconAssets searchQuery={searchQuery} />
           </TabsContent>
 
           <TabsContent value="components">
-            <ComponentAssets />
+            <ComponentAssets searchQuery={searchQuery} />
           </TabsContent>
         </Tabs>
       </main>

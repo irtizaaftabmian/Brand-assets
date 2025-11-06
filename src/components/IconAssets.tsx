@@ -13,7 +13,11 @@ interface IconAsset {
   svg: string;
 }
 
-export function IconAssets() {
+interface IconAssetsProps {
+  searchQuery?: string;
+}
+
+export function IconAssets({ searchQuery = "" }: IconAssetsProps) {
   const [icons, setIcons] = useState<IconAsset[]>([]);
   const [newIcon, setNewIcon] = useState({ name: "", svg: "" });
   const [dialogOpen, setDialogOpen] = useState(false);
@@ -61,6 +65,11 @@ export function IconAssets() {
   const handleDelete = (id: string) => {
     saveIcons(icons.filter(i => i.id !== id));
   };
+
+  // Filter icons based on search query
+  const filteredIcons = icons.filter((icon) =>
+    icon.name.toLowerCase().includes(searchQuery.toLowerCase())
+  );
 
   return (
     <div className="space-y-6">
@@ -134,9 +143,13 @@ export function IconAssets() {
         <div className="border border-dashed rounded-lg p-12 text-center">
           <p className="text-muted-foreground">No icons yet. Add your first icon to get started.</p>
         </div>
+      ) : filteredIcons.length === 0 ? (
+        <div className="border border-dashed rounded-lg p-12 text-center">
+          <p className="text-muted-foreground">No icons match your search.</p>
+        </div>
       ) : (
         <div className="grid grid-cols-4 gap-4">
-          {icons.map((icon) => (
+          {filteredIcons.map((icon) => (
             <AssetCard
               key={icon.id}
               id={icon.id}

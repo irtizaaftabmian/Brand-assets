@@ -13,7 +13,11 @@ interface LogoAsset {
   format: string;
 }
 
-export function LogoAssets() {
+interface LogoAssetsProps {
+  searchQuery?: string;
+}
+
+export function LogoAssets({ searchQuery = "" }: LogoAssetsProps) {
   const [logos, setLogos] = useState<LogoAsset[]>([]);
   const [newLogo, setNewLogo] = useState({ name: "", imageUrl: "" });
   const [dialogOpen, setDialogOpen] = useState(false);
@@ -61,6 +65,12 @@ export function LogoAssets() {
   const handleDelete = (id: string) => {
     saveLogos(logos.filter(l => l.id !== id));
   };
+
+  // Filter logos based on search query
+  const filteredLogos = logos.filter((logo) =>
+    logo.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+    logo.format.toLowerCase().includes(searchQuery.toLowerCase())
+  );
 
   return (
     <div className="space-y-6">
@@ -129,9 +139,13 @@ export function LogoAssets() {
         <div className="border border-dashed rounded-lg p-12 text-center">
           <p className="text-muted-foreground">No logos yet. Add your first logo to get started.</p>
         </div>
+      ) : filteredLogos.length === 0 ? (
+        <div className="border border-dashed rounded-lg p-12 text-center">
+          <p className="text-muted-foreground">No logos match your search.</p>
+        </div>
       ) : (
         <div className="grid grid-cols-4 gap-4">
-          {logos.map((logo) => (
+          {filteredLogos.map((logo) => (
             <AssetCard
               key={logo.id}
               id={logo.id}
